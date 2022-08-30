@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% block title %}Bien venue dans notre video center!{% endblock %}
+{% block body %}
+<div class = "container">
+    <div class = "row">
+        {% for video in videos %}
+            {% if app.user and video.ispremium == 1 %}
+                    <article class='col-5'>
+                        <a href="{{ path('app_video_show', {id: video.id}) }}">
+                            <h1>{{ video.title|u.truncate(30,'...',false) }}</h1>
+                        </a>
+                        <p>{{ video.description|u.truncate(25,'...',false) }}</p>
+                        <iframe class="video-center" src={{ video.getVideoLink }}></iframe>
+                        <p>Submitted
+                            {{ video.createdAt|ago }}
+                            <br>
+                            {{ video.createdAt|date }}</p>
+                        <p>By
+                            {{ video.user.firstname ~" "~ video.user.lastname }}</p>
+                    </article>
+                {% elseif video.ispremium == 0 %}
+                    <article class='col-5'>
+                        <a href="{{ path('app_video_show', {id: video.id}) }}">
+                            <h1>{{ video.title|u.truncate(30,'...',false) }}</h1>
+                        </a>
+                        <p>{{ video.description|u.truncate(25,'...',false) }}</p>
+                        <iframe class="video-center" src={{ video.getVideoLink }}></iframe>
+                        <p>Submitted
+                            {{ video.createdAt|ago }}
+                            <br>
+                            {{ video.createdAt|date }}</p>
+                        <p>By
+                            {{ video.user.firstname ~" "~ video.user.lastname }}</p>
+                    </article>
+                {% endif %}
+        {% else %}
+            <p> Sorry, no pin yet </p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
