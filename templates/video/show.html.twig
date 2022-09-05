@@ -10,7 +10,7 @@
         <p>Updated {{ video.updatedAt|date }}</p>
 
     </article>
-       {% if app.user and app.user.firstname == video.user.firstname  %}
+       {% if app.user and app.user.id == video.user.id  %}
         <a href="{{ path('app_video_edit', {id: video.id}) }}">Edit Video | </a>
         <a href="#" onclick="event.preventDefault(); confirm('Are you sure ?') && document.getElementById('js-video-delete-form').submit();">Delete | </a>
         <a href="{{ path('app_home') }}">Go Back</a>

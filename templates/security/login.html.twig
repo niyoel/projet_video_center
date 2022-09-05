@@ -25,7 +25,7 @@
      value="{{ csrf_token('authenticate') }}" >
     <button class="btn btn-primary" type="submit">Sign in</button>
     <div class="mb-3"> <a href="#"> Forgot password ? </a> </div>
-    <div style= text-align:center>Not registered yet?<a href=""> Create your Account </a>
+    <div style= text-align:center>Not registered yet?<a href={{ path ("app_register") }}> Create your Account </a>
 </div>
 </div>
 </form>

@@ -10,6 +10,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Form\VideoType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
 
 class VideoController extends AbstractController
 {
@@ -21,11 +22,19 @@ class VideoController extends AbstractController
     #[Route('/video/{id<[0-9]+>}', name:'app_video_show', methods:'GET')]
     public function show(Video $video): Response
     {
+        if (!$this->getUser() && $video->isIsPremium()){
+            $this->addFlash('error','You have to be connected to see Premium videos');
+            return $this->redirectToRoute('app_home');
+        }
         return $this->render('video/show.html.twig', compact('video'));
     }    
-    #[Route("/video/create", name:"app_video_create", methods: ["GET","POST"])]
+    #[Route("/create", name:"app_video_create", methods: ["GET","POST"])]
     public function create(Request $request, EntityManagerInterface $em): Response
     {
+        if (!$this->getUser()){
+            $this->addFlash('error','You have to be connected to create a video');
+            return $this->redirectToRoute('app_home');
+        }
         $video = new Video;
         $form = $this->createForm(VideoType::class, $video);
         $form->handleRequest($request);
@@ -41,8 +50,12 @@ class VideoController extends AbstractController
        }
        #[Route('/video/{id<[0-9]+>}/edit', name:'app_video_edit', methods: ['GET', 'POST'])] 
 
-       public function edit(Request $request, Video $video, EntityManagerInterface $em): Response
+       public function edit(Request $request, Video $video, EntityManagerInterface $em, User $user): Response
        {
+            if (!$this->getUser() || $video->getUser()->getId()!=$user->getId()){
+                $this->addFlash('error','You have to be the owner of the video');
+                return $this->redirectToRoute('app_home');
+            }
            $form = $this->createForm(VideoType::class, $video);
            $form->handleRequest($request);
            
@@ -61,9 +74,13 @@ class VideoController extends AbstractController
        
       public function delete(Video $video, EntityManagerInterface $em): Response
        {
-               $em->remove($video);
+        if (!$this->getUser() || $video->getUser()->getId()!=$user->getId()){
+            $this->addFlash('error','You have to be the owner of the video to delete');
+            return $this->redirectToRoute('app_home');
+        }
+            $em->remove($video);
                $em->flush();
                $this->addFlash('info', 'video successfully deleted !'); 
                return $this->redirectToRoute('app_home');
-         }
+}
 }

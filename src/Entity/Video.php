@@ -27,7 +27,7 @@ class Video
     
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank(message:"Votre champs ne peut pas être vide")]
-    #[Assert\Length(min:3, minMessage:'Vous devez avoir une description de minimum {{ limit }} caractères ! ')]
+    #[Assert\Length(min:15, minMessage:'Vous devez avoir une description de minimum {{ limit }} caractères ! ')]
     private $description;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'videos')]
