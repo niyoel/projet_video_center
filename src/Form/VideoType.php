@@ -14,6 +14,7 @@ class VideoType extends AbstractType
             ->add('title')
             ->add('videoLink')
             ->add('description')
+            ->add('isPremium')
             
         ;
     }

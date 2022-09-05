@@ -1,17 +1,16 @@
 {% extends 'base.html.twig' %}
 {% block title %}{{ video.title }}{% endblock %}
 {% block body %}      
- {% if app.user and video.ispremium  %} 
     <article>
         <h1>{{ video.title }}</h1>
-         <iframe width="300" height="200"
+         <iframe width="600" height="450"
          src={{ video.videoLink }} width = "600 " height="200" > </iframe>
         <p>{{ video.description }}</p>
         <p>Submitted {{ video.createdAt|date }}</p>
         <p>Updated {{ video.updatedAt|date }}</p>
 
     </article>
-       {% if app.user %}
+       {% if app.user and app.user.firstname == video.user.firstname  %}
         <a href="{{ path('app_video_edit', {id: video.id}) }}">Edit Video | </a>
         <a href="#" onclick="event.preventDefault(); confirm('Are you sure ?') && document.getElementById('js-video-delete-form').submit();">Delete | </a>
         <a href="{{ path('app_home') }}">Go Back</a>
